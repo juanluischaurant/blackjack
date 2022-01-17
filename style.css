@@ -1,0 +1,31 @@
+*,
+*::after,
+*::before {
+	box-sizing: border-box;
+}
+
+body {
+	font-family: sans-serif;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100vh;
+}
+
+.game-container {
+	/* margin: auto auto; */
+	min-width: 500px;
+	max-width: 80%;
+}
+
+.game-status {
+	display: flex;
+	justify-content: right;
+}
+.game-status .status-info-text {
+	display: inline-block;
+}
+
+img {
+	max-width: 110px;
+}
