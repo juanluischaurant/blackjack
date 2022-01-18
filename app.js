@@ -32,7 +32,7 @@ let cardsSet = {
 
 const getRandomIntInclusive = (min, max) => {
   //The maximum is inclusive and the minimum is inclusive
-  return Math.floor(Math.random() * (max - min + 1) + min); 
+  return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
 const getRandomCard = () => {
@@ -40,7 +40,7 @@ const getRandomCard = () => {
   const suitName = cardSuits[randomNum]
   const suitSet = cardsSet[cardSuits[randomNum]]
   // console.log('suit:', suitName)
-  
+
   randomNum = getRandomIntInclusive(0,12)
   const cardName = cardNames[randomNum]
   const cardValue = suitSet[randomNum]
@@ -63,11 +63,13 @@ const generateLeadCard = (isHidden) => {
   const backSRC = `./svg_playing_cards/backs/abstract.svg`
   const frontSRC = `./svg_playing_cards/fronts/${lead.suit}_${lead.name}.svg`
   leadCards.push(lead)
-  
+
   let leadCard = document.createElement('img')
   leadCard.src = isHidden ? backSRC : frontSRC
   leadCardsContainer.appendChild(leadCard)
-}  
+
+  return lead
+}
 
 const generatePlayerCard = (isHidden) => {
   const player = getRandomCard()
@@ -80,13 +82,13 @@ const generatePlayerCard = (isHidden) => {
   playerCardsContainer.appendChild(playerCard1)
 }
 
-const getPlayerTotal = () => { 
+const getPlayerTotal = () => {
   let playerTotal = () => {
     return playerCards.map((el)=>el.value).reduce((prev, curr) => {
       return prev+curr
     })
   }
-  
+
   let ace = playerCards.find((el)=>el.name==='ace')
   if(playerTotal() > 21 && typeof(ace) !== 'undefined')  ace.value = 1
 
@@ -174,18 +176,18 @@ const evaluateGame = () => {
     if(getLeadTotal() === 21) {
       playerStatus.innerText = winMessage('cpu', 'round-blackjack')
       leadStatus.innerText = loseMessage('cpu', 'round-blackjack')
-  
+
       leadMoney += 20
       playerMoney -= 20
     }
     else if(getPlayerTotal() === 21) {
       playerStatus.innerText = winMessage('player', 'round-blackjack')
       leadStatus.innerText = loseMessage('player', 'round-blackjack')
-  
+
       leadMoney -= 20
       playerMoney += 20
     }
-  
+
     if(getPlayerTotal() > getLeadTotal() && getPlayerTotal() < 21) {
       // if player wins
       // console.log('player wins')
@@ -236,29 +238,33 @@ buttonNewCard.addEventListener('click', () => {
   }
 });
 
+const drawAndEvaluate = () => {
+  const total = getLeadTotal()
+  const playTotal = getPlayerTotal()
+  if (total < 17 && total < playTotal) {
+    setTimeout(() => {
+      generateLeadCard()
+      if (getLeadTotal() < 17 && total < playTotal) {
+        drawAndEvaluate()
+      } else {
+        evaluateGame()
+      }
+    }, 1000)
+  } else {
+    evaluateGame()
+  }
+}
+
 buttonStay.addEventListener('click', () => {
   if(!roundEnded && !gameEnded) {
     let containerChildren = leadCardsContainer.children
 
     containerChildren[0].src = `./svg_playing_cards/fronts/${leadCards[0].suit}_${leadCards[0].name}.svg`
 
-    if(
-      getLeadTotal() < 17  
-      && getPlayerTotal() >= getLeadTotal()
-      && getPlayerTotal() <= 21
-    ) {
-      while(getLeadTotal()<17 
-        && getLeadTotal() <= getPlayerTotal() 
-        && getLeadTotal() !== getPlayerTotal()) 
-      {
-        generateLeadCard()
-      }
-    }
-    evaluateGame()
-      
+    drawAndEvaluate()
   }
 });
-  
+
 buttonNextRound.addEventListener('click', () => {
   if(roundEnded && !gameEnded) {
     initialCardsHand()
@@ -278,7 +284,7 @@ const initialCardsHand = () => {
 
   generatePlayerCard(false)
   generatePlayerCard(false)
- 
+
   roundEnded = false
 }
 
