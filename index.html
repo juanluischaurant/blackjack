@@ -11,6 +11,7 @@
   <div class="game-container">
 
     <div class="game-status">
+      <button data-open-modal='#rules-modal' class="open-rules">Rules</button>
       <h2>Current Status: <span class="status-info-text">playing</span></h2>
     </div>
     <div class="lead-container">
@@ -30,12 +31,31 @@
   
     </div>
 
-    <button id="button-stay">stay</button>
-    <button id="button-card">new card</button>
+    <button id="button-stay">stand</button>
+    <button id="button-card">hit</button>
     <button id="button-next">next round</button>
 
   </div>
+
+  <div id="rules-modal">
+    <header class="modal-header">
+      <h1>The rules</h1>
+      <button data-close-modal class="modal-close">&times;</button>
+    </header>
+    <section class="modal-body">
+      <h2>Object of the Game</h2>
+      <p>Player attempts to beat the dealer by getting a count as close to 21 as possible, without going over 21.</p>
+      <h2>Rules</h2>
+      <p>An ace is worth 1 or 11. If the card cound goes over 21 for any of the participants, the ace is automatically worth 1, else, it's worth 11.</p>
+      <p>If a participant's hand has 2 or more aces, only one of these may be worth 1.</p>
+      <p>Once the player stands, the dealer's face-down card is turned up. If the total is 17 or more, it must stand. If the total is 16 or under, dealer must take a card. The dealer must continue to take cards until the total is 17 or more, or his hand is worth more than player's, at which point the dealer must stand.</p>
+      <p>The participant who reaches 0$ first, is the one to lose the match.</p>
+      
+    </section>
+  </div>
+  <div id="overlay"></div>
   
+  <script src="modal.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

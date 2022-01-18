@@ -113,12 +113,20 @@ const winMessage = (who, roundOrMatch) => {
   if(who === 'player' && roundOrMatch === 'match') {
     return 'Player takes the money'
   }
+  if(who === 'player' && roundOrMatch === 'round-blackjack') {
+    return "Player's blackjack"
+  }
+
   if(who === 'cpu' && roundOrMatch === 'round') {
     return 'CPU wins round'
   }
   if(who === 'cpu' && roundOrMatch === 'match') {
     return 'CPU takes the money'
   }
+  if(who === 'cpu' && roundOrMatch === 'round-blackjack') {
+    return "Dealer's blackjack"
+  }
+
   if(who === 'draw' && roundOrMatch === 'round') {
     return 'this is DRAW'
   }
@@ -133,13 +141,18 @@ const loseMessage = (who, roundOrMatch) => {
   if(who === 'player' && roundOrMatch === 'match') {
     return 'CPU loses the money'
   }
+  if(who === 'player' && roundOrMatch === 'round-blackjack') {
+    return "Player's blackjack, Dealer loses round"
+  }
   if(who === 'cpu' && roundOrMatch === 'round') {
     return 'Player loses round'
   }
-  if(who === 'cpu' && roundOrMatch === 'match') {
-    return 'Player loses the money'
+  if(who === 'cpu' && roundOrMatch === 'round-blackjack') {
+    return "Dealer's blackjack, Player loses round"
   }
-
+  if(who === 'cpu' && roundOrMatch === 'match') {
+    return 'CPU takes the money'
+  }
 }
 
 const evaluateGame = () => {
@@ -157,8 +170,23 @@ const evaluateGame = () => {
       leadMoney += 20
       playerMoney -= 20
     }
+
+    if(getLeadTotal() === 21) {
+      playerStatus.innerText = winMessage('cpu', 'round-blackjack')
+      leadStatus.innerText = loseMessage('cpu', 'round-blackjack')
   
-    if(getPlayerTotal() > getLeadTotal() && getPlayerTotal() <= 21) {
+      leadMoney += 20
+      playerMoney -= 20
+    }
+    else if(getPlayerTotal() === 21) {
+      playerStatus.innerText = winMessage('player', 'round-blackjack')
+      leadStatus.innerText = loseMessage('player', 'round-blackjack')
+  
+      leadMoney -= 20
+      playerMoney += 20
+    }
+  
+    if(getPlayerTotal() > getLeadTotal() && getPlayerTotal() < 21) {
       // if player wins
       // console.log('player wins')
       playerStatus.innerText = winMessage('player', 'round')
@@ -167,7 +195,7 @@ const evaluateGame = () => {
       leadMoney -= 20
       playerMoney += 20
     }
-    else if(getLeadTotal() > getPlayerTotal() && getLeadTotal() <= 21) {
+    else if(getLeadTotal() > getPlayerTotal() && getLeadTotal() < 21) {
       // if cpu wins
       leadStatus.innerText = winMessage('cpu', 'round')
       playerStatus.innerText = loseMessage('cpu', 'round')
@@ -215,20 +243,16 @@ buttonStay.addEventListener('click', () => {
     containerChildren[0].src = `./svg_playing_cards/fronts/${leadCards[0].suit}_${leadCards[0].name}.svg`
 
     if(
-      getLeadTotal() < 18  
-      && getRandomIntInclusive(1, 6) >= 4
-      && getPlayerTotal() <= 21
+      getLeadTotal() < 17  
       && getPlayerTotal() >= getLeadTotal()
-    ) {
-      generateLeadCard()
-    }
-    else if(
-      getLeadTotal() > 18
-      && getRandomIntInclusive(1, 15) > 11
       && getPlayerTotal() <= 21
-      && getPlayerTotal() >= getLeadTotal()
     ) {
-      generateLeadCard()
+      while(getLeadTotal()<17 
+        && getLeadTotal() <= getPlayerTotal() 
+        && getLeadTotal() !== getPlayerTotal()) 
+      {
+        generateLeadCard()
+      }
     }
     evaluateGame()
       

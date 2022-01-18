@@ -1,8 +1,19 @@
+/* basic reset */
 *,
 *::after,
 *::before {
 	box-sizing: border-box;
 }
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5 {
+	margin: 0;
+}
+/* end basic reset */
 
 body {
 	font-family: sans-serif;
@@ -28,4 +39,53 @@ body {
 
 img {
 	max-width: 110px;
+}
+
+/* modal */
+
+#overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: rgba(0, 0, 0, 0.5);
+	pointer-events: none;
+	opacity: 0;
+	transition: 200ms ease-in-out;
+}
+
+#overlay.active {
+	opacity: 1;
+	pointer-events: all;
+}
+
+#rules-modal {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%) scale(0);
+	transition: 200ms ease-in-out;
+	background: #fff;
+	z-index: 10;
+	max-width: 80vw;
+	padding: 2em;
+}
+#rules-modal.active {
+	transform: translate(-50%, -50%) scale(1);
+}
+
+.modal-header {
+	display: flex;
+	justify-content: space-between;
+	margin: 1em auto;
+}
+
+.modal-body h2 {
+	margin-bottom: 0.5em;
+}
+
+.modal-body p {
+	line-height: 1.5em;
+	margin-bottom: 0.5em;
 }
